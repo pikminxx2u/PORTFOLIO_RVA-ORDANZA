@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reading Visual Art Portfolio — Allyza Maye H. Ordanza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --parchment:    #fff0f5;
+      --parchment2:   #f5dde8;
+      --parchment3:   #e8c4d4;
+      --ink:          #2a1020;
+      --sepia-light:  #b0607a;
+      --gold:         #d4789a;
+      --gold-bright:  #f0a0bb;
+      --gold-muted:   rgba(212,120,154,0.18);
+      --gold-border:  rgba(212,120,154,0.38);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'EB Garamond', Garamond, Georgia, serif;
+      --font-caps:    'Cinzel', 'Trajan Pro', serif;
+      --radius-sm: 3px;
+      --radius:    6px;
+      --radius-lg: 12px;
+      --transition: 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background-color: #1e0a12;
+      background-image:
+        radial-gradient(ellipse 120% 100% at 50% 0%, transparent 30%, rgba(10,3,6,0.6) 100%),
+        linear-gradient(160deg, #2d0e1c 0%, #1e0a12 40%, #120608 100%);
+      color: var(--parchment);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.75;
+      overflow-x: hidden;
+      background-attachment: fixed;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+    nav, #loader, #lightbox, #portfolio { position: relative; z-index: 1; }
+    .skip-link { position: absolute; top: -60px; left: 1rem; background: var(--gold); color: var(--ink); padding: 6px 14px; font-family: var(--font-caps); font-size: 0.75rem; letter-spacing: 0.12em; border-radius: var(--radius-sm); transition: top 0.2s; z-index: 9999; }
+    .skip-link:focus { top: 10px; }
+    #loader { position: fixed; inset: 0; z-index: 9999; background: #120608; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s ease; }
+    .loader-emblem { width: 72px; height: 72px; border: 1.5px solid var(--gold-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: emblem-spin 8s linear infinite; }
+    .loader-emblem::before { content: '✦'; font-size: 1.6rem; color: var(--gold); animation: emblem-pulse 2s ease-in-out infinite; }
+    @keyframes emblem-spin  { to { transform: rotate(360deg); } }
+    @keyframes emblem-pulse { 0%,100%{opacity:0.4;transform:scale(0.85)} 50%{opacity:1;transform:scale(1)} }
+    .loader-text { font-family: var(--font-caps); font-size: 0.7rem; letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; margin-top: 1.5rem; animation: emblem-pulse 2s ease-in-out infinite; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; background: rgba(18,6,12,0.92); backdrop-filter: blur(12px) saturate(1.4); border-bottom: 1px solid var(--gold-border); padding: 0 2.5rem; height: 62px; display: flex; align-items: center; justify-content: space-between; }
+    nav::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .nav-logo { font-family: var(--font-caps); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; text-shadow: 0 0 20px rgba(212,120,154,0.4); }
+    .nav-links { display: flex; gap: 2.2rem; align-items: center; }
+    .nav-links a { font-family: var(--font-caps); font-size: 0.68rem; color: var(--parchment3); text-decoration: none; letter-spacing: 0.18em; text-transform: uppercase; transition: color var(--transition); position: relative; padding-bottom: 2px; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: var(--gold); transition: width var(--transition); }
+    .nav-links a:hover { color: var(--gold-bright); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-toggle span { display: block; width: 24px; height: 1.5px; background: var(--parchment); transition: var(--transition); }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .nav-drawer { display: none; position: fixed; top: 62px; left: 0; right: 0; z-index: 499; background: rgba(18,6,12,0.97); border-bottom: 1px solid var(--gold-border); flex-direction: column; align-items: center; padding: 1rem 0; }
+    .nav-drawer.open { display: flex; }
+    .nav-drawer a { font-family: var(--font-caps); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment3); text-decoration: none; padding: 0.85rem 2rem; width: 100%; text-align: center; border-bottom: 0.5px solid rgba(212,120,154,0.1); transition: color var(--transition), background var(--transition); }
+    .nav-drawer a:hover { color: var(--gold); background: rgba(212,120,154,0.06); }
+    #portfolio { opacity: 0; transition: opacity 0.9s ease; }
+    .ornament-divider { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 0.5rem 0; }
+    .ornament-divider::before, .ornament-divider::after { content: ''; flex: 1; height: 0.5px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); }
+    .ornament-divider span { font-size: 0.9rem; color: var(--gold); opacity: 0.6; white-space: nowrap; letter-spacing: 0.2em; }
+    .section-rule { border: none; border-top: 0.5px solid rgba(212,120,154,0.18); margin: 0; }
+    .cover { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 9rem 2rem 6rem; position: relative; overflow: hidden; border-bottom: 1px solid var(--gold-border); }
+    .cover::before { content: ''; position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(ellipse 80% 70% at 50% 40%, rgba(180,60,100,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 60% at 20% 80%, rgba(160,40,90,0.1) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 80% 20%, rgba(212,120,154,0.08) 0%, transparent 60%); }
+    .cover::after { content: ''; position: absolute; inset: 2.5rem; z-index: 0; border: 1px solid rgba(212,120,154,0.14); pointer-events: none; }
+    .cover > * { position: relative; z-index: 1; }
+    .cover-badge { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--font-caps); font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-border); padding: 6px 18px; border-radius: 2px; margin-bottom: 2.5rem; background: rgba(212,120,154,0.07); animation: fadeUp 0.8s ease 0.2s both; }
+    .cover-title { font-family: var(--font-display); font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 400; font-style: italic; color: var(--parchment); line-height: 1.0; margin-bottom: 0.5rem; text-shadow: 0 4px 40px rgba(10,3,6,0.6); animation: fadeUp 0.8s ease 0.35s both; }
+    .cover-title-sub { font-family: var(--font-display); font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 400; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 2.5rem; animation: fadeUp 0.8s ease 0.5s both; }
+    .cover-ornament { font-size: 1.1rem; color: var(--gold); opacity: 0.5; letter-spacing: 0.6em; margin: 0 auto 2.5rem; animation: fadeUp 0.8s ease 0.6s both; }
+    .cover-info-table { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.5rem; text-align: left; margin: 0 auto 3rem; max-width: 360px; animation: fadeUp 0.8s ease 0.7s both; }
+    .cover-info-key { font-family: var(--font-caps); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sepia-light); padding-top: 3px; }
+    .cover-info-val { font-family: var(--font-body); font-size: 0.95rem; color: var(--parchment2); }
+    .cover-scroll { font-family: var(--font-caps); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(212,120,154,0.5); margin-top: 1rem; animation: fadeUp 0.8s ease 0.9s both; }
+    .cover-scroll span { display: block; animation: bob 2s ease-in-out infinite; margin-top: 6px; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+    .section-wrap { max-width: 820px; margin: 0 auto; padding: 5.5rem 2rem; }
+    .section-wrap-wide { max-width: 1160px; margin: 0 auto; padding: 5.5rem 2rem; }
+    .section-eyebrow { font-family: var(--font-caps); font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+    .section-heading { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 400; font-style: italic; color: var(--parchment); margin-bottom: 2.5rem; line-height: 1.2; }
+    .toc-section { border-bottom: 1px solid rgba(212,120,154,0.15); }
+    .toc-list { list-style: none; }
+    .toc-item { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.8rem 0; border-bottom: 0.5px solid rgba(212,120,154,0.1); transition: padding-left var(--transition), background var(--transition); border-radius: var(--radius-sm); cursor: pointer; }
+    .toc-item:hover { padding-left: 10px; background: rgba(212,120,154,0.04); }
+    .toc-num { font-family: var(--font-display); font-style: italic; font-size: 0.85rem; color: var(--gold); min-width: 28px; }
+    .toc-link { font-family: var(--font-body); font-size: 0.95rem; color: var(--parchment3); text-decoration: none; flex: 1; transition: color var(--transition); }
+    .toc-item:hover .toc-link { color: var(--parchment); }
+    .toc-dots { flex: 1; border-bottom: 1px dotted rgba(212,120,154,0.25); margin: 0 6px; align-self: center; }
+    .toc-page { font-family: var(--font-caps); font-size: 0.58rem; letter-spacing: 0.15em; color: var(--sepia-light); }
+    .statement-section { border-bottom: 1px solid rgba(212,120,154,0.15); }
+    .statement-frame { background: rgba(255,240,245,0.04); border: 1px solid rgba(212,120,154,0.22); border-left: 3px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 2.5rem 3rem; position: relative; }
+    .statement-frame::before, .statement-frame::after { content: '✦'; position: absolute; font-size: 0.7rem; color: var(--gold); opacity: 0.4; }
+    .statement-frame::before { top: 10px; right: 14px; }
+    .statement-frame::after  { bottom: 10px; right: 14px; }
+    .statement-frame p { font-family: var(--font-body); font-size: 1.05rem; color: rgba(255,240,245,0.78); line-height: 1.95; margin-bottom: 1.1rem; }
+    .statement-frame p:last-child { margin-bottom: 0; }
+    .modules-section { border-bottom: 1px solid rgba(212,120,154,0.15); }
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; margin-top: 2.5rem; }
+    .module-card { background: rgba(35,10,20,0.88); border: 1px solid rgba(212,120,154,0.18); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition); backdrop-filter: blur(4px); }
+    .module-card:hover { border-color: rgba(212,120,154,0.55); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,120,154,0.1) inset; }
+    .module-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem; border-bottom: 1px solid rgba(212,120,154,0.12); background: rgba(212,120,154,0.05); }
+    .module-tag { font-family: var(--font-caps); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+    .module-counter { font-family: var(--font-display); font-style: italic; font-size: 0.75rem; color: rgba(212,120,154,0.4); }
+    .img-area { width: 100%; aspect-ratio: 4/3; background: #1a0810; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; }
+    .img-area img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.55s ease; filter: saturate(0.9) brightness(0.9); }
+    .img-area:hover img { transform: scale(1.07); filter: saturate(1.05) brightness(0.95); }
+    .img-zoom-overlay { position: absolute; inset: 0; z-index: 2; background: transparent; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+    .img-area:hover .img-zoom-overlay { background: rgba(20,5,12,0.42); }
+    .zoom-btn { opacity: 0; transition: opacity var(--transition), transform var(--transition); width: 52px; height: 52px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .img-area:hover .zoom-btn { opacity: 1; transform: scale(1.1); }
+    .zoom-btn svg { width: 20px; height: 20px; }
+    .card-body { padding: 1.2rem 1.3rem 1.4rem; }
+    .card-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.3rem; }
+    .card-artwork-title { font-family: var(--font-display); font-size: 1rem; font-weight: 500; color: var(--parchment2); line-height: 1.3; }
+    .card-concept-tag { font-family: var(--font-caps); font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: var(--radius-sm); background: var(--gold-muted); color: var(--gold); white-space: nowrap; flex-shrink: 0; margin-top: 2px; border: 1px solid var(--gold-border); }
+    .card-medium { font-family: var(--font-body); font-style: italic; font-size: 0.82rem; color: var(--sepia-light); margin-bottom: 1rem; }
+    .card-desc-section { border-top: 0.5px solid rgba(212,120,154,0.12); padding-top: 1rem; }
+    .card-desc-label { font-family: var(--font-caps); font-size: 0.55rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(212,120,154,0.35); margin-bottom: 0.45rem; }
+    .card-desc-text { font-family: var(--font-body); font-size: 0.88rem; color: rgba(255,240,245,0.5); line-height: 1.85; font-style: italic; }
+
+    /* LIGHTBOX */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(8,3,5,0.97);
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    #lightbox.open {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lb-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      max-width: 1200px;
+      width: 100%;
+      animation: lbIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .lb-description {
+      flex: 0 1 360px;
+      max-height: 76vh;
+      overflow-y: auto;
+      animation: lbSlideIn 0.5s ease 0.1s both;
+    }
+    .lb-description::-webkit-scrollbar { width: 4px; }
+    .lb-description::-webkit-scrollbar-track { background: rgba(212,120,154,0.1); border-radius: 2px; }
+    .lb-description::-webkit-scrollbar-thumb { background: var(--gold-border); border-radius: 2px; }
+    .lb-module-tag { font-family: var(--font-caps); font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; display: block; }
+    .lb-title { font-family: var(--font-display); font-style: italic; font-size: 1.8rem; color: var(--parchment); margin-bottom: 0.6rem; line-height: 1.2; }
+    .lb-medium { font-family: var(--font-body); font-style: italic; font-size: 0.9rem; color: var(--sepia-light); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(212,120,154,0.2); }
+    .lb-desc-label { font-family: var(--font-caps); font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(212,120,154,0.5); margin-bottom: 0.6rem; display: block; }
+    .lb-desc-text { font-family: var(--font-body); font-size: 1rem; color: rgba(255,240,245,0.7); line-height: 1.9; }
+    .lb-concept-tag { display: inline-block; font-family: var(--font-caps); font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-sm); background: var(--gold-muted); color: var(--gold); border: 1px solid var(--gold-border); margin-top: 1.5rem; }
+    .lb-image-wrap { flex: 0 1 auto; max-width: 60%; display: flex; align-items: center; justify-content: center; }
+    #lb-img { max-width: 100%; max-height: 76vh; object-fit: contain; border-radius: var(--radius); box-shadow: 0 0 0 1px rgba(212,120,154,0.2), 0 40px 80px rgba(0,0,0,0.8); }
+    @keyframes lbIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes lbSlideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    #lb-close { position: fixed; top: 1.5rem; right: 1.75rem; width: 42px; height: 42px; background: rgba(212,120,154,0.1); border: 1px solid var(--gold-border); border-radius: 50%; cursor: pointer; color: var(--parchment3); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition), transform var(--transition); z-index: 9001; font-family: var(--font-caps); }
+    #lb-close:hover { background: rgba(212,120,154,0.25); transform: rotate(90deg); }
+
+    @media (max-width: 900px) {
+      .lb-container { flex-direction: column-reverse; gap: 2rem; }
+      .lb-description { flex: 0 1 auto; max-width: 100%; max-height: none; text-align: center; }
+      .lb-image-wrap { max-width: 100%; }
+      #lb-img { max-height: 50vh; }
+      .lb-concept-tag { margin-top: 1rem; }
+    }
+
+    .doc-section { border-bottom: 1px solid rgba(212,120,154,0.15); }
+    .doc-tabs { display: flex; gap: 0; border: 1px solid rgba(212,120,154,0.2); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
+    .doc-tab { flex: 1; padding: 1rem 1.2rem; background: none; border: none; border-right: 1px solid rgba(212,120,154,0.15); cursor: pointer; text-align: center; transition: background var(--transition); position: relative; }
+    .doc-tab:last-child { border-right: none; }
+    .doc-tab::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transition: transform var(--transition); }
+    .doc-tab.active { background: rgba(212,120,154,0.08); }
+    .doc-tab.active::after { transform: scaleX(1); }
+    .doc-tab-mod { font-family: var(--font-caps); font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(212,120,154,0.45); display: block; margin-bottom: 0.3rem; transition: color var(--transition); }
+    .doc-tab.active .doc-tab-mod { color: var(--gold); }
+    .doc-tab-name { font-family: var(--font-display); font-size: 0.88rem; font-style: italic; color: rgba(255,240,245,0.4); display: block; line-height: 1.3; transition: color var(--transition); }
+    .doc-tab.active .doc-tab-name { color: var(--parchment2); }
+    .doc-viewer { background: rgba(22,8,14,0.88); border: 1px solid rgba(212,120,154,0.2); border-radius: var(--radius-lg); overflow: hidden; position: relative; }
+    .doc-corner { position: absolute; z-index: 3; pointer-events: none; width: 18px; height: 18px; }
+    .doc-corner-tl { top: 10px; left: 10px; border-top: 1px solid rgba(212,120,154,0.4); border-left: 1px solid rgba(212,120,154,0.4); }
+    .doc-corner-tr { top: 10px; right: 10px; border-top: 1px solid rgba(212,120,154,0.4); border-right: 1px solid rgba(212,120,154,0.4); }
+    .doc-corner-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(212,120,154,0.4); border-left: 1px solid rgba(212,120,154,0.4); }
+    .doc-corner-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(212,120,154,0.4); border-right: 1px solid rgba(212,120,154,0.4); }
+    .doc-img-wrap { width: 100%; aspect-ratio: 16/9; background: #150610; position: relative; overflow: hidden; cursor: zoom-in; }
+    .doc-img-wrap img { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; opacity: 0; transform: scale(0.98); transition: opacity 0.4s ease, transform 0.4s ease; pointer-events: none; }
+    .doc-img-wrap img.doc-active { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .doc-zoom-hint { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s; background: rgba(10,3,6,0.35); }
+    .doc-img-wrap:hover .doc-zoom-hint { opacity: 1; }
+    .doc-zoom-circle { width: 54px; height: 54px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .doc-zoom-circle svg { width: 22px; height: 22px; }
+    .doc-caption { display: grid; grid-template-columns: auto 1fr; gap: 0 2rem; padding: 1.8rem 2rem; border-top: 1px solid rgba(212,120,154,0.12); align-items: start; }
+    .doc-cap-num { font-family: var(--font-display); font-style: italic; font-size: 3rem; color: rgba(212,120,154,0.15); line-height: 1; padding-top: 4px; user-select: none; }
+    .doc-cap-tag { font-family: var(--font-caps); font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.35rem; }
+    .doc-cap-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; color: var(--parchment2); margin-bottom: 0.5rem; line-height: 1.3; }
+    .doc-cap-text { font-family: var(--font-body); font-size: 0.9rem; font-style: italic; color: rgba(255,240,245,0.5); line-height: 1.85; }
+    .doc-cap-chips { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .doc-cap-chip { font-family: var(--font-caps); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border: 1px solid rgba(212,120,154,0.18); border-radius: var(--radius-sm); color: var(--sepia-light); }
+    .doc-thumbs { display: flex; gap: 0; border-top: 1px solid rgba(212,120,154,0.1); background: rgba(10,3,6,0.4); }
+    .doc-thumb { flex: 1; aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer; border-right: 1px solid rgba(212,120,154,0.1); transition: background var(--transition); }
+    .doc-thumb:last-child { border-right: none; }
+    .doc-thumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5) saturate(0.6); transition: filter var(--transition); display: block; }
+    .doc-thumb.doc-thumb-active img { filter: brightness(0.85) saturate(0.85); }
+    .doc-thumb:hover img { filter: brightness(0.7) saturate(0.8); }
+    .doc-thumb-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0.5rem; background: linear-gradient(to top, rgba(10,3,6,0.85) 0%, transparent 60%); }
+    .doc-thumb-mod { font-family: var(--font-caps); font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(212,120,154,0.5); display: block; margin-bottom: 1px; }
+    .doc-thumb.doc-thumb-active .doc-thumb-mod { color: var(--gold); }
+    .doc-thumb-label { font-family: var(--font-body); font-size: 0.72rem; font-style: italic; color: rgba(255,240,245,0.45); text-align: center; line-height: 1.2; }
+    .doc-thumb.doc-thumb-active .doc-thumb-label { color: var(--parchment3); }
+    .doc-thumb::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transition: transform var(--transition); }
+    .doc-thumb.doc-thumb-active::after { transform: scaleX(1); }
+    .about-section { border-top: 1px solid rgba(212,120,154,0.15); }
+    .about-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .about-text { font-family: var(--font-body); font-size: 0.97rem; color: rgba(255,240,245,0.65); line-height: 1.95; }
+    .about-text p { margin-bottom: 1.1rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.6rem; }
+    .skill-chip { font-family: var(--font-caps); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border: 1px solid rgba(212,120,154,0.2); border-radius: var(--radius-sm); color: var(--sepia-light); transition: border-color var(--transition), color var(--transition), background var(--transition); cursor: default; }
+    .skill-chip:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-muted); }
+    .contact-section { border-top: 1px solid rgba(212,120,154,0.15); }
+    .contact-frame { background: rgba(35,10,20,0.7); border: 1px solid rgba(212,120,154,0.22); border-radius: var(--radius-lg); padding: 3.5rem 3rem; text-align: center; position: relative; overflow: hidden; }
+    .contact-frame::before { content: ''; position: absolute; inset: 8px; border: 1px solid rgba(212,120,154,0.07); border-radius: calc(var(--radius-lg) - 4px); pointer-events: none; }
+    .contact-frame p { font-family: var(--font-body); font-size: 0.97rem; color: rgba(255,240,245,0.6); margin-bottom: 1.5rem; line-height: 1.85; }
+    .contact-email { font-family: var(--font-display); font-style: italic; font-size: 1.5rem; color: var(--gold); text-shadow: 0 0 20px rgba(212,120,154,0.3); display: block; margin-bottom: 0.5rem; }
+    footer { border-top: 1px solid rgba(212,120,154,0.15); padding: 2.5rem 2rem; text-align: center; }
+    .footer-ornament { font-family: var(--font-caps); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(212,120,154,0.35); }
+    .footer-divider { font-size: 0.8rem; color: rgba(212,120,154,0.25); margin: 0 0.5rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .cover::after { inset: 1rem; }
+      .cover { padding: 8rem 1.2rem 4rem; }
+      .cover-title { font-size: clamp(2.5rem,12vw,3.5rem); }
+      .section-wrap, .section-wrap-wide { padding: 4rem 1.2rem; }
+      .statement-frame { padding: 1.8rem 1.5rem; }
+      .modules-grid { grid-template-columns: 1fr; }
+      .about-cols { grid-template-columns: 1fr; gap: 2.5rem; }
+      .contact-frame { padding: 2.5rem 1.5rem; }
+      .doc-tabs { flex-direction: column; }
+      .doc-tab { border-right: none; border-bottom: 1px solid rgba(212,120,154,0.15); }
+      .doc-tab:last-child { border-bottom: none; }
+      .doc-caption { grid-template-columns: 1fr; gap: 0.5rem; padding: 1.2rem 1.2rem 1.5rem; }
+      .doc-cap-num { display: none; }
+    }
+    @media (max-width: 480px) {
+      .cover-info-table { grid-template-columns: 1fr; gap: 0.2rem 0; }
+      .cover-info-key { display: inline; margin-right: 0.4rem; }
+      .cover-info-key::after { content: ':'; }
+      .cover-info-val { display: inline; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="skip-link" href="#works">Skip to works</a>
+
+<div id="loader" aria-hidden="true">
+  <div class="loader-emblem"></div>
+  <p class="loader-text">Reading Visual Art</p>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork details">
+  <button id="lb-close" onclick="closeLb()" aria-label="Close">✕</button>
+  <div class="lb-container">
+    <div class="lb-description">
+      <span class="lb-module-tag" id="lb-module"></span>
+      <h2 class="lb-title" id="lb-title"></h2>
+      <p class="lb-medium" id="lb-medium"></p>
+      <span class="lb-desc-label">Description & Reflection</span>
+      <p class="lb-desc-text" id="lb-desc"></p>
+      <span class="lb-concept-tag" id="lb-concept"></span>
+    </div>
+    <div class="lb-image-wrap">
+      <img id="lb-img" src="" alt="Enlarged artwork view" />
+    </div>
+  </div>
+</div>
+
+<nav aria-label="Main navigation">
+  <span class="nav-logo">RVA Portfolio</span>
+  <div class="nav-links" id="nav-links">
+    <a href="#cover">Cover</a>
+    <a href="#toc">Contents</a>
+    <a href="#works">Works</a>
+    <a href="#documentation">Process</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer">
+  <a href="#cover"         onclick="closeDrawer()">Cover</a>
+  <a href="#toc"           onclick="closeDrawer()">Contents</a>
+  <a href="#works"         onclick="closeDrawer()">Works</a>
+  <a href="#documentation" onclick="closeDrawer()">Process</a>
+  <a href="#about"         onclick="closeDrawer()">About</a>
+  <a href="#contact"       onclick="closeDrawer()">Contact</a>
+</div>
+
+<div id="portfolio">
+
+  <!-- COVER -->
+  <section class="cover" id="cover" aria-label="Cover page">
+    <p class="cover-badge">✦ Academic Portfolio ✦</p>
+    <h1 class="cover-title">Visual<br>Language</h1>
+    <p class="cover-title-sub">Reading Visual Art</p>
+    <p class="cover-ornament">— ✦ —</p>
+    <div class="cover-info-table" role="list">
+      <span class="cover-info-key" role="listitem">Name</span><span class="cover-info-val">Allyza Maye H. Ordanza</span>
+      <span class="cover-info-key">Course</span><span class="cover-info-val">Reading Visual Art</span>
+      <span class="cover-info-key">Section</span><span class="cover-info-val">Block — 2A</span>
+      <span class="cover-info-key">Contact</span><span class="cover-info-val">ordanzaallyza@gmail.com</span>
+      <span class="cover-info-key">Year</span><span class="cover-info-val">2026</span>
+    </div>
+    <p class="cover-scroll">Scroll to explore<span>↓</span></p>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc-section" id="toc">
+    <div class="section-wrap">
+      <p class="section-eyebrow">Navigation</p>
+      <h2 class="section-heading">Table of Contents</h2>
+      <div class="ornament-divider"><span>✦</span></div>
+      <ul class="toc-list fade-up" role="list" style="margin-top:1.5rem;">
+        <li class="toc-item"><span class="toc-num">00</span><a class="toc-link" href="#cover">Cover Page</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">Cover</span></li>
+        <li class="toc-item"><span class="toc-num">01</span><a class="toc-link" href="#statement">Artist Statement</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 1</span></li>
+        <li class="toc-item"><span class="toc-num">02</span><a class="toc-link" href="#mod1">Module 1 — Digital Visual World Collage</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 2</span></li>
+        <li class="toc-item"><span class="toc-num">03</span><a class="toc-link" href="#mod2">Module 2 — Observational Drawing (7 Elements)</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 3</span></li>
+        <li class="toc-item"><span class="toc-num">04</span><a class="toc-link" href="#mod3">Module 3 — Abstract Composition</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 4</span></li>
+        <li class="toc-item"><span class="toc-num">05</span><a class="toc-link" href="#mod4">Module 4 — Transformation Series</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 5</span></li>
+        <li class="toc-item"><span class="toc-num">06</span><a class="toc-link" href="#mod5">Module 5 — Filipino-Inspired Pattern Design</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 6</span></li>
+        <li class="toc-item"><span class="toc-num">07</span><a class="toc-link" href="#mod67">Module 6–7 — Drawing or Painting Artwork</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 7</span></li>
+        <li class="toc-item"><span class="toc-num">08</span><a class="toc-link" href="#mod8">Module 8 — Digital Poster</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 8</span></li>
+        <li class="toc-item"><span class="toc-num">09</span><a class="toc-link" href="#mod9">Module 9 — Photo Narrative Series</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 9</span></li>
+        <li class="toc-item"><span class="toc-num">10</span><a class="toc-link" href="#mod10">Module 10 — Infographic (IT Topic)</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 10</span></li>
+        <li class="toc-item"><span class="toc-num">11</span><a class="toc-link" href="#mod11">Module 11 — Meme Series</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 11</span></li>
+        <li class="toc-item"><span class="toc-num">12</span><a class="toc-link" href="#documentation">Documentation &amp; Process</a><span class="toc-dots" aria-hidden="true"></span><span class="toc-page">§ 12</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ARTIST STATEMENT -->
+  <div class="statement-section" id="statement">
+    <div class="section-wrap">
+      <p class="section-eyebrow">Artist Statement</p>
+      <h2 class="section-heading">In my own words</h2>
+      <div class="statement-frame fade-up">
+        <p>Visual art has always been a language I wanted to become fluent in, but honestly I'm still learning how to speak it. This portfolio shows that process, not just the finished works, but how my way of seeing changed over time.</p>
+        <p>At first, I used to just look at images for what they show. Now I notice more things, like why certain colors feel strong or why empty space sometimes says more than details. I still get confused sometimes when making decisions, like what color to use or how to arrange elements, but I think that's part of it.</p>
+        <p>As an IT student, I didn't expect to enjoy the creative side this much. But I realized design and coding are kind of similar, both need structure, but also some creativity to actually work well.</p>
+        <p>This isn't a perfect collection, and some parts could be better, but it shows real progress. And I think that matters more.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE GALLERY -->
+  <div class="modules-section" id="works">
+    <div class="section-wrap-wide">
+      <p class="section-eyebrow">Portfolio Works</p>
+      <h2 class="section-heading">Modules 1 – 11</h2>
+      <div class="ornament-divider"><span>✦</span></div>
+      <div class="modules-grid">
+
+        <!-- MODULE 1 -->
+        <div class="module-card fade-up" id="mod1">
+          <div class="module-header"><span class="module-tag">Module 1</span><span class="module-counter">01 / 11</span></div>
+          <div class="img-area" 
+               data-title="Digital Visual World Collage"
+               data-module="Module 1"
+               data-medium="Canva (Digital) · 2026"
+               data-concept="Collage · Mixed Media"
+               data-desc="My collage shows the visuals I interact with daily like music, games, and personal interests. I included artists, pop culture, apps, and personal symbols like my cat. These reflect what I enjoy and how I spend my time. I focused on balance and a clear center to organize everything.">
+            <img src="images/module1.png" alt="Module 1 – Digital Visual World Collage">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Digital Visual World Collage</p><span class="card-concept-tag">Collage · Mixed Media</span></div>
+            <p class="card-medium">Canva (Digital) · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">My collage shows the visuals I interact with daily like music, games, and personal interests. I included artists, pop culture, apps, and personal symbols like my cat. These reflect what I enjoy and how I spend my time. I focused on balance and a clear center to organize everything.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module-card fade-up" id="mod2">
+          <div class="module-header"><span class="module-tag">Module 2</span><span class="module-counter">02 / 11</span></div>
+          <div class="img-area"
+               data-title="Observational Drawing"
+               data-module="Module 2"
+               data-medium="Pencil & Eraser · 2026"
+               data-concept="7 Elements of Art"
+               data-desc="I drew a Rubik's cube and a tumbler on top of a book. I focused on proportions, perspective, and shading. I used light and shadow to show depth. The hardest part was keeping the shapes accurate while also making it look realistic.">
+            <img src="images/module2.jpg" alt="Module 2 – Observational Drawing">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Observational Drawing</p><span class="card-concept-tag">7 Elements of Art</span></div>
+            <p class="card-medium">Pencil &amp; Eraser · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I drew a Rubik's cube and a tumbler on top of a book. I focused on proportions, perspective, and shading. I used light and shadow to show depth. The hardest part was keeping the shapes accurate while also making it look realistic.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module-card fade-up" id="mod3">
+          <div class="module-header"><span class="module-tag">Module 3</span><span class="module-counter">03 / 11</span></div>
+          <div class="img-area"
+               data-title="Abstract Composition"
+               data-module="Module 3"
+               data-medium="Construction Paper & Glue · 2026"
+               data-concept="Form · Color · Balance"
+               data-desc="I used different shades of blue to create an abstract design. I arranged the shapes to form a pattern and create balance. Even without a subject, I focused on rhythm and visual flow so it doesn't look random.">
+            <img src="images/module3.jpg" alt="Module 3 – Abstract Composition">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Abstract Composition</p><span class="card-concept-tag">Form · Color · Balance</span></div>
+            <p class="card-medium">Construction Paper &amp; Glue · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I used different shades of blue to create an abstract design. I arranged the shapes to form a pattern and create balance. Even without a subject, I focused on rhythm and visual flow so it doesn't look random.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 4 -->
+        <div class="module-card fade-up" id="mod4">
+          <div class="module-header"><span class="module-tag">Module 4</span><span class="module-counter">04 / 11</span></div>
+          <div class="img-area"
+               data-title="Transformation Series"
+               data-module="Module 4"
+               data-medium="Acrylic Markers & Pencil · 2026"
+               data-concept="3 Versions · Concept"
+               data-desc="I created three versions of a mango: realistic, abstract, and non-objective. Each version changes how the mango is seen. The realistic one focuses on detail, while the others focus more on shape and color.">
+            <img src="images/module4.jpg" alt="Module 4 – Transformation Series">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Transformation Series</p><span class="card-concept-tag">3 Versions · Concept</span></div>
+            <p class="card-medium">Acrylic Markers &amp; Pencil · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I created three versions of a mango: realistic, abstract, and non-objective. Each version changes how the mango is seen. The realistic one focuses on detail, while the others focus more on shape and color.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 5 -->
+        <div class="module-card fade-up" id="mod5">
+          <div class="module-header"><span class="module-tag">Module 5</span><span class="module-counter">05 / 11</span></div>
+          <div class="img-area"
+               data-title="Filipino-Inspired Pattern Design"
+               data-module="Module 5"
+               data-medium="Felt Tip Pen & Acrylic Markers · 2026"
+               data-concept="Pattern · Rhythm · Culture"
+               data-desc="I made a Baybayin design with my name in the center. I added okir and inabel patterns as the border. I focused on repetition and symmetry to make the design look organized and culturally inspired.">
+            <img src="images/module5.jpg" alt="Module 5 – Filipino Pattern">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Filipino-Inspired Pattern Design</p><span class="card-concept-tag">Pattern · Rhythm · Culture</span></div>
+            <p class="card-medium">Felt Tip Pen &amp; Acrylic Markers · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I made a Baybayin design with my name in the center. I added okir and inabel patterns as the border. I focused on repetition and symmetry to make the design look organized and culturally inspired.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 6–7 -->
+        <div class="module-card fade-up" id="mod67">
+          <div class="module-header"><span class="module-tag">Module 6–7</span><span class="module-counter">06–07 / 11</span></div>
+          <div class="img-area"
+               data-title="Drawing or Painting Artwork"
+               data-module="Module 6–7"
+               data-medium="Pencil & Eraser · 2026"
+               data-concept="Still Life · Shading"
+               data-desc="I drew a still life with an onion, a pawn, and a pencil sharpener. I focused on shading and texture to make each object look different. I also paid attention to lighting to make the objects look more realistic.">
+            <img src="images/module6.jpg" alt="Module 6–7 – Drawing or Painting">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Drawing or Painting Artwork</p><span class="card-concept-tag">Still Life · Shading</span></div>
+            <p class="card-medium">Pencil &amp; Eraser · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I drew a still life with an onion, a pawn, and a pencil sharpener. I focused on shading and texture to make each object look different. I also paid attention to lighting to make the objects look more realistic.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 8 -->
+        <div class="module-card fade-up" id="mod8">
+          <div class="module-header"><span class="module-tag">Module 8</span><span class="module-counter">08 / 11</span></div>
+          <div class="img-area"
+               data-title="Digital Poster"
+               data-module="Module 8"
+               data-medium="Canva · 2026"
+               data-concept="Typography · Layout · Design"
+               data-desc="I created an Earth Day awareness poster. I used green tones and clear text to highlight the message. I arranged the layout to make the important information easy to see first.">
+            <img src="images/module8.png" alt="Module 8 – Digital Poster">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Digital Poster</p><span class="card-concept-tag">Typography · Layout · Design</span></div>
+            <p class="card-medium">Canva · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I created an Earth Day awareness poster. I used green tones and clear text to highlight the message. I arranged the layout to make the important information easy to see first.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 9 -->
+        <div class="module-card fade-up" id="mod9">
+          <div class="module-header"><span class="module-tag">Module 9</span><span class="module-counter">09 / 11</span></div>
+          <div class="img-area"
+               data-title="Photo Narrative Series"
+               data-module="Module 9"
+               data-medium="Photography · 2026"
+               data-concept="Story · Photography"
+               data-desc="I captured a day in my life as an IT student. The photos show simple moments like watching anime, eating, and going home. I focused on composition and timing to make the story feel natural.">
+            <img src="images/module9.png" alt="Module 9 – Photo Narrative">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Photo Narrative Series</p><span class="card-concept-tag">Story · Photography</span></div>
+            <p class="card-medium">Photography · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I captured a day in my life as an IT student. The photos show simple moments like watching anime, eating, and going home. I focused on composition and timing to make the story feel natural.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 10 -->
+        <div class="module-card fade-up" id="mod10">
+          <div class="module-header"><span class="module-tag">Module 10</span><span class="module-counter">10 / 11</span></div>
+          <div class="img-area"
+               data-title="Infographic — IT Topic"
+               data-module="Module 10"
+               data-medium="Canva · 2026"
+               data-concept="Data Viz · Information Design"
+               data-desc="I made an infographic about the emotional impact of social media. I used graphs, icons, and spacing to make the information clear and easy to understand.">
+            <img src="images/module10.jpg" alt="Module 10 – IT Infographic">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Infographic — IT Topic</p><span class="card-concept-tag">Data Viz · Information Design</span></div>
+            <p class="card-medium">Canva · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I made an infographic about the emotional impact of social media. I used graphs, icons, and spacing to make the information clear and easy to understand.</p></div>
+          </div>
+        </div>
+
+        <!-- MODULE 11 -->
+        <div class="module-card fade-up" id="mod11">
+          <div class="module-header"><span class="module-tag">Module 11</span><span class="module-counter">11 / 11</span></div>
+          <div class="img-area"
+               data-title="Meme Series Creation"
+               data-module="Module 11"
+               data-medium="Canva · 2026"
+               data-concept="Humor · Visual Rhetoric"
+               data-desc="I created a meme about the stereotype that IT students can hack or fix everything. I used humor and familiar formats to make it relatable and easy to understand.">
+            <img src="images/module11.jpg" alt="Module 11 – Meme Series">
+            <div class="img-zoom-overlay"><div class="zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div></div>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row"><p class="card-artwork-title">Meme Series Creation</p><span class="card-concept-tag">Humor · Visual Rhetoric</span></div>
+            <p class="card-medium">Canva · 2026</p>
+            <div class="card-desc-section"><p class="card-desc-label">Description &amp; Reflection</p>
+            <p class="card-desc-text">I created a meme about the stereotype that IT students can hack or fix everything. I used humor and familiar formats to make it relatable and easy to understand.</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTATION / PROCESS -->
+  <div class="doc-section" id="documentation">
+    <div class="section-wrap-wide">
+      <p class="section-eyebrow">Behind the Work</p>
+      <h2 class="section-heading">Documentation &amp; Process</h2>
+      <div class="ornament-divider"><span>✦</span></div>
+      <p style="font-family:var(--font-body);font-size:0.95rem;color:rgba(255,240,245,0.45);font-style:italic;margin-bottom:2.5rem;margin-top:-1.5rem;">
+        A look at the working process behind three selected modules — from initial observation through to the finished piece.
+      </p>
+
+      <div class="doc-tabs fade-up" role="tablist" aria-label="Select module documentation">
+        <button class="doc-tab active" onclick="switchDoc(0)" role="tab" aria-selected="true" id="doc-tab-0">
+          <span class="doc-tab-mod">Module 2</span>
+          <span class="doc-tab-name">Observational Drawing</span>
+        </button>
+        <button class="doc-tab" onclick="switchDoc(1)" role="tab" aria-selected="false" id="doc-tab-1">
+          <span class="doc-tab-mod">Module 8</span>
+          <span class="doc-tab-name">Digital Poster</span>
+        </button>
+        <button class="doc-tab" onclick="switchDoc(2)" role="tab" aria-selected="false" id="doc-tab-2">
+          <span class="doc-tab-mod">Module 11</span>
+          <span class="doc-tab-name">Meme Series</span>
+        </button>
+      </div>
+
+      <div class="doc-viewer fade-up">
+        <div class="doc-corner doc-corner-tl"></div>
+        <div class="doc-corner doc-corner-tr"></div>
+        <div class="doc-corner doc-corner-bl"></div>
+        <div class="doc-corner doc-corner-br"></div>
+
+        <div class="doc-img-wrap" onclick="openDocLb()" aria-label="Click to enlarge">
+          <img id="doc-img-0" class="doc-active" src="images/doc1.jpg" alt="Documentation – Module 2: Observational Drawing process">
+          <img id="doc-img-1"                    src="images/doc2.jpg" alt="Documentation – Module 8: Digital Poster process">
+          <img id="doc-img-2"                    src="images/doc3.jpg" alt="Documentation – Module 11: Meme Series process">
+          <div class="doc-zoom-hint" aria-hidden="true">
+            <div class="doc-zoom-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#2a1020" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-caption" id="doc-caption" aria-live="polite"></div>
+
+        <div class="doc-thumbs" role="list">
+          <div class="doc-thumb doc-thumb-active" onclick="switchDoc(0)" role="listitem" tabindex="0" aria-label="Module 2 documentation">
+            <img src="images/doc1.jpg" alt="Module 2 process thumbnail">
+            <div class="doc-thumb-overlay">
+              <span class="doc-thumb-mod">Module 2</span>
+              <span class="doc-thumb-label">Observational Drawing</span>
+            </div>
+          </div>
+          <div class="doc-thumb" onclick="switchDoc(1)" role="listitem" tabindex="0" aria-label="Module 8 documentation">
+            <img src="images/doc2.jpg" alt="Module 8 process thumbnail">
+            <div class="doc-thumb-overlay">
+              <span class="doc-thumb-mod">Module 8</span>
+              <span class="doc-thumb-label">Digital Poster</span>
+            </div>
+          </div>
+          <div class="doc-thumb" onclick="switchDoc(2)" role="listitem" tabindex="0" aria-label="Module 11 documentation">
+            <img src="images/doc3.jpg" alt="Module 11 process thumbnail">
+            <div class="doc-thumb-overlay">
+              <span class="doc-thumb-mod">Module 11</span>
+              <span class="doc-thumb-label">Meme Series</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="about-section" id="about">
+    <div class="section-wrap-wide">
+      <p class="section-eyebrow">About</p>
+      <h2 class="section-heading">Reading the visual world</h2>
+      <div class="about-cols fade-up">
+        <div>
+          <div class="about-text">
+            <p>This portfolio shows my journey in Reading Visual Art. It explores how images communicate meaning using the elements and principles of art across eleven modules.</p>
+            <p>Each work is not just shown, but also understood as a visual language, using line, shape, color, texture, space, and composition to express ideas and emotion.</p>
+          </div>
+          <div class="skill-chips">
+            <span class="skill-chip">Color Theory</span>
+            <span class="skill-chip">Line &amp; Form</span>
+            <span class="skill-chip">Composition</span>
+            <span class="skill-chip">Texture</span>
+            <span class="skill-chip">Value</span>
+            <span class="skill-chip">Space</span>
+            <span class="skill-chip">Symbolism</span>
+            <span class="skill-chip">Art Analysis</span>
+            <span class="skill-chip">Photography</span>
+            <span class="skill-chip">Digital Design</span>
+            <span class="skill-chip">Pattern Design</span>
+            <span class="skill-chip">Visual Rhetoric</span>
+          </div>
+        </div>
+        <div>
+          <div class="about-text">
+            <p>Skills explored:
+              Color Theory · Line & Form · Composition · Texture · Value · Space · Symbolism · Art Analysis · Photography · Digital Design · Pattern Design · Visual Rhetoric</p>
+            <p>My approach focuses on understanding both what an artwork shows and how it communicates meaning.
+            This collection includes Modules 1 to 11, each highlighting a different concept learned in the course, with a focus on how visual design connects with technology and communication.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact-section" id="contact">
+    <div class="section-wrap">
+      <p class="section-eyebrow">Contact</p>
+      <h2 class="section-heading">Get in touch</h2>
+      <div class="contact-frame fade-up">
+        <p>Interested in my work or have questions about visual art analysis?<br>Feel free to reach out.</p>
+        <span class="contact-email">ordanzaallyza@gmail.com</span>
+        <div class="ornament-divider" style="margin-top:2rem;"><span>✦</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ornament-divider" style="margin-bottom:1.2rem;"><span>— ✦ —</span></div>
+    <p class="footer-ornament">
+      Reading Visual Art Portfolio
+      <span class="footer-divider">·</span>
+      Allyza Maye H. Ordanza
+      <span class="footer-divider">·</span>
+      2026
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var loader = document.getElementById('loader');
+      var portfolio = document.getElementById('portfolio');
+      loader.style.opacity = '0';
+      portfolio.style.opacity = '1';
+      setTimeout(function () { loader.style.display = 'none'; }, 1000);
+    }, 1800);
+  });
+
+  function openLb(el) {
+    var img = el.querySelector('img');
+    if (!img) return;
+    document.getElementById('lb-img').src = img.src;
+    document.getElementById('lb-title').textContent = el.getAttribute('data-title') || '';
+    document.getElementById('lb-module').textContent = el.getAttribute('data-module') || '';
+    document.getElementById('lb-medium').textContent = el.getAttribute('data-medium') || '';
+    document.getElementById('lb-desc').textContent = el.getAttribute('data-desc') || '';
+    document.getElementById('lb-concept').textContent = el.getAttribute('data-concept') || '';
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeLb() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  
+  document.getElementById('lightbox').addEventListener('click', function (e) {
+    if (e.target === this) closeLb();
+  });
+  
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLb();
+  });
+
+  document.querySelectorAll('.img-area[data-title]').forEach(function(el) {
+    el.addEventListener('click', function() { openLb(this); });
+  });
+
+  var toggle = document.getElementById('nav-toggle');
+  var drawer = document.getElementById('nav-drawer');
+  toggle.addEventListener('click', function () {
+    var open = drawer.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
+  });
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  var fadeEls = document.querySelectorAll('.fade-up');
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(function (el) { obs.observe(el); });
+  } else {
+    fadeEls.forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  (function () {
+    var testImg = new Image();
+    testImg.onload = function () {
+      document.body.style.backgroundImage = [
+        "radial-gradient(ellipse 120% 100% at 50% 0%, transparent 30%, rgba(10,3,6,0.72) 100%)",
+        "url('images/background.jpg')"
+      ].join(', ');
+      document.body.style.backgroundSize = 'auto, cover';
+      document.body.style.backgroundPosition = 'center, center';
+      document.body.style.backgroundAttachment = 'fixed, fixed';
+    };
+    testImg.src = 'images/background.jpg';
+  })();
+
+  var DOC_DATA = [
+    {
+      num: '01',
+      module: 'Module 2 — Observational Drawing',
+      title: 'Seeing Before Drawing',
+      text: 'This shows the actual objects before drawing, a Rubik\'s cube, a tumbler, and a book. It helped me observe details like shape, lighting, and position before starting.',
+      chips: ['Direct Observation', 'Pencil Work', '7 Elements'],
+      img: 'images/doc1.jpg'
+    },
+    {
+      num: '02',
+      module: 'Module 8 — Digital Poster',
+      title: 'Working in Canva',
+      text: 'This shows me working on the Earth Day poster in Canva. It highlights how I arranged elements and adjusted the layout during the process.',
+      chips: ['Digital Tools', 'Layout Planning', 'Typography'],
+      img: 'images/doc2.jpg'
+    },
+    {
+      num: '03',
+      module: 'Module 11 — Meme Series',
+      title: 'Building the Meme',
+      text: 'This shows the process of making the meme, editing, choosing the right text, and finalizing the design before the final output.',
+      chips: ['Canva', 'Text & Image', 'Visual Humor'],
+      img: 'images/doc3.jpg'
+    }
+  ];
+
+  var currentDoc = 0;
+
+  function renderCaption(idx) {
+    var d = DOC_DATA[idx];
+    document.getElementById('doc-caption').innerHTML =
+      '<div class="doc-cap-num">' + d.num + '</div>' +
+      '<div class="doc-cap-body">' +
+        '<span class="doc-cap-tag">' + d.module + '</span>' +
+        '<p class="doc-cap-title">' + d.title + '</p>' +
+        '<p class="doc-cap-text">' + d.text + '</p>' +
+        '<div class="doc-cap-chips">' +
+          d.chips.map(function(c){ return '<span class="doc-cap-chip">' + c + '</span>'; }).join('') +
+        '</div>' +
+      '</div>';
+  }
+
+  function switchDoc(idx) {
+    if (idx === currentDoc) return;
+    document.getElementById('doc-img-' + currentDoc).classList.remove('doc-active');
+    document.getElementById('doc-img-' + idx).classList.add('doc-active');
+    document.getElementById('doc-tab-' + currentDoc).classList.remove('active');
+    document.getElementById('doc-tab-' + currentDoc).setAttribute('aria-selected','false');
+    document.getElementById('doc-tab-' + idx).classList.add('active');
+    document.getElementById('doc-tab-' + idx).setAttribute('aria-selected','true');
+    var thumbs = document.querySelectorAll('.doc-thumb');
+    thumbs[currentDoc].classList.remove('doc-thumb-active');
+    thumbs[idx].classList.add('doc-thumb-active');
+    currentDoc = idx;
+    renderCaption(idx);
+  }
+
+  function openDocLb() {
+    var d = DOC_DATA[currentDoc];
+    document.getElementById('lb-img').src = d.img;
+    document.getElementById('lb-title').textContent = d.title;
+    document.getElementById('lb-module').textContent = d.module;
+    document.getElementById('lb-medium').textContent = 'Process Documentation';
+    document.getElementById('lb-desc').textContent = d.text;
+    document.getElementById('lb-concept').textContent = d.chips.join(' · ');
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.querySelectorAll('.doc-thumb').forEach(function(thumb, i) {
+    thumb.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); switchDoc(i); }
+    });
+  });
+
+  renderCaption(0);
+</script>
+
+</body>
+</html>
